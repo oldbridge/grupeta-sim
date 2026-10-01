@@ -1,0 +1,9 @@
+# raw Garmin export and private photos (not published)
+inputs/
+config/portraits/*
+!config/portraits/README.txt
+config/players.local.js
+# test output
+build/
+__pycache__/
+*.pyc
