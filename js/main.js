@@ -36,6 +36,11 @@
     // config/players.local.js: private, git-ignored rider overrides (e.g. portrait photos)
     if (!q.has('nolocal') && !window.PLAYERS_LOCAL) await load('config/players.local.js');
     G.initPlayers();
+    // config/online.js: Firebase project (git-ignored; bundled into the protected site)
+    if (!q.has('offline') && !window.ONLINE_CONFIG) await load('config/online.js');
+    if (G.Net.setup()) {
+      try { await G.Net.init(); } catch (e) { console.warn('online mode unavailable', e); G.Net.enabled = false; }
+    }
     if (!window.PLAYERS || !window.PLAYERS.length) {
       document.getElementById('screen').textContent = 'No riders: check config/players.js (python3 tools/import_players.py --check). ' + (G.playerWarnings || []).join(' · ');
       return;

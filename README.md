@@ -79,6 +79,28 @@ This is client-side protection: anyone with the password can open the game, and 
 strength of the password. The source code in this public repository is readable anyway; the encryption
 keeps the hosted game and the photos private.
 
+## Online: personal logins and the Altzola taberna
+
+With `config/online.js` present (git-ignored; bundled only into the password-protected site) the game is online,
+backed by the Firebase project `grupeta-sim` (Authentication + Realtime Database, Belgium):
+
+- **Personal login.** After the site password every friend picks their rider and types their own password
+  (simple Basque cycling words, see `build/accounts.txt`, not in git). Logged in, you can only ride as yourself.
+- **Persistent career.** Levels, perks, relationships and the autosave live in the cloud and follow you to any
+  device. Every finished ride is stored in your **ride registry**.
+- **🍺 Altzola taberna** (title menu): who is online and where (in the tavern, riding Jaizkibel km 23…), when each
+  friend last came by the tavern, their last ride; click a rider for their profile (level, stats, perks, best mates,
+  ride registry with full results, relationship changes and the ride log). Real-time **chat**, plus buttons to
+  **brag** about a ride (the message links to its registry) or post your stats.
+- **Security:** `database.rules.json` (published in the Firebase console): nothing is readable without logging in,
+  every rider can write only their own profile / career / save / rides / presence, chat messages can't be forged
+  or edited.
+- `python3 tools/firebase_accounts.py` creates missing accounts for new riders (`--check` verifies the passwords);
+  `python3 tools/onlinetest.py` runs two friends at once (login, lock, tavern, chat, presence).
+
+Without `config/online.js` (e.g. a fresh clone) everything works offline as before; the tavern then shows only
+what that browser knows.
+
 ## Saving
 
 - The game **autosaves** at every stage and every 20 s during the ride → *Continue* on the title screen.
@@ -129,4 +151,8 @@ tools/simtest.js           headless rides and statistics
 tools/playtest.py          Playwright autopilot through a whole Sunday (TRIP=home|away|epic, ASKBAR=1, CRASHTEST=1, FOOT=1)
 tools/savetest.py          save → quit → continue → reload → load slot round trip
 tools/build_site.py        encrypted single-page build for GitHub Pages (--with-portraits, --deploy)
+tools/firebase_accounts.py one Firebase login per rider (Basque cycling-word passwords)
+tools/onlinetest.py        two browsers online at once: login, tavern, chat, presence
+database.rules.json        Firebase Realtime Database security rules
+js/net.js, js/taberna.js   online layer (login, cloud career, presence, rides, chat) and the tavern
 ```

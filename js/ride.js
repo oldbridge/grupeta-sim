@@ -69,7 +69,11 @@
       };
       sizeMain();
       window.addEventListener('resize', sizeMain);
-      const autosave = () => { st.barMinutes = barMinutes; G.Game.autosaveRide(st, sim); };
+      const autosave = () => {
+        st.barMinutes = barMinutes;
+        G.Game.autosaveRide(st, sim);
+        if (G.Online) G.Online.where('riding', `${route.name} · km ${G.fmtKm(me.s)}`);
+      };
 
       const act = {
         paceUp: () => sim.setPace(1), paceDown: () => sim.setPace(-1),

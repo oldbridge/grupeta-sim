@@ -293,3 +293,51 @@ canvas.pix { display: block; width: 100%; height: auto; image-rendering: pixelat
 .wa-row .portrait { border-radius: 50%; margin-top: 2px; }
 .wa-row .wa-msg { max-width: calc(80% - 32px); }
 .cfg-warn { background: #3a2a10; border: 1px solid var(--warn); color: #ffd9a0; border-radius: 8px; padding: 8px 12px; font-size: 12.5px; }
+
+/* ---------- login */
+.login-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr); gap: 14px; align-items: start; }
+.login-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.login-card { display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--panel); border: 2px solid var(--line); border-radius: 8px; padding: 10px 6px; cursor: pointer; font-family: var(--pix); font-size: 9px; }
+.login-card.sel { border-color: var(--accent); box-shadow: 0 0 0 2px #ff7a4544; }
+.login-side { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.login-who { display: flex; gap: 12px; align-items: center; }
+.login-pw { font-size: 17px; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); }
+.login-err { color: var(--bad); min-height: 18px; }
+.rider-card.locked { opacity: 0.55; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------- Altzola taberna */
+.taberna-stage .scene-row.with-side { grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); }
+.tab-right { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px; min-height: 0; display: flex; flex-direction: column; max-height: 70vh; }
+.tab-pane { display: flex; flex-direction: column; min-height: 0; flex: 1; overflow-y: auto; }
+.tab-bottom { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.tab-riders { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 6px; }
+.tab-rider { display: flex; gap: 8px; align-items: center; text-align: left; background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; cursor: pointer; }
+.tab-rider:hover { border-color: var(--accent); }
+.tab-rider.on { box-shadow: inset 3px 0 0 var(--good); }
+.tab-rider.me { background: #ffef5a12; }
+.tr-main { min-width: 0; }
+.tr-name { font-weight: 700; display: flex; gap: 8px; align-items: baseline; }
+.tr-lvl { font-family: var(--pix); font-size: 8px; color: var(--accent2); }
+.tr-line { font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tab-chat { display: flex; flex-direction: column; gap: 6px; min-height: 0; flex: 1; }
+.tab-msgs { flex: 1; min-height: 220px; max-height: 46vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding: 4px; background: #0003; border-radius: 6px; }
+.tab-msg { display: flex; gap: 8px; align-items: flex-start; font-size: 13.5px; }
+.tab-msg.mine .tm-text { color: #ffe9b0; }
+.tab-msg.brag .tm-text { color: var(--accent2); font-weight: 600; }
+.tab-msg.stats .tm-text { color: var(--info); }
+.tm-head { font-size: 12px; }
+.tab-say { display: flex; gap: 6px; }
+.tab-input { flex: 1; min-width: 0; font-size: 15px; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); }
+.btn.small { padding: 3px 8px; font-size: 12px; margin-top: 3px; }
+.tab-profile { display: flex; flex-direction: column; gap: 8px; }
+.tab-facts { display: flex; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+.tab-hist { display: flex; flex-direction: column; gap: 3px; }
+.tab-ride { display: grid; grid-template-columns: 92px 1fr 64px 110px 54px; gap: 6px; text-align: left; background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; font-size: 12.5px; }
+.tab-ride:hover { border-color: var(--accent); }
+.modal.registry { max-width: 780px; max-height: 90vh; overflow-y: auto; }
+.modal.registry .modal-body { font-family: var(--sans); font-size: 13.5px; display: flex; flex-direction: column; gap: 8px; }
+.reg-sum { display: flex; flex-direction: column; gap: 2px; }
+.reg-log { max-height: 220px; overflow-y: auto; background: #0004; border-radius: 6px; padding: 6px; font-size: 12px; }
+@media (max-width: 980px) { .login-layout { grid-template-columns: 1fr; } .tab-ride { grid-template-columns: 1fr 1fr; } }
+.taberna-sign { top: 2%; font-size: clamp(9px, 1.6vw, 16px); }

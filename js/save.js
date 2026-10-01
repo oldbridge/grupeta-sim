@@ -14,12 +14,15 @@
       career: G.store.get('career', {}), st: stJSON, sim: simJSON || null,
     };
   };
-  Save.write = (slot, p) => G.store.set('save.' + slot, p);
+  Save.write = (slot, p) => { G.store.set('save.' + slot, p); if (slot === 'auto' && G.Net && G.Net.me) G.Net.pushSave(p); };
   Save.read = (slot) => {
     const p = G.store.get('save.' + slot, null);
     return p && p.game === 'igandeko-irteera' ? p : null;
   };
-  Save.remove = (slot) => { try { localStorage.removeItem('irunride.save.' + slot); } catch (e) { /* ignore */ } };
+  Save.remove = (slot) => {
+    try { localStorage.removeItem('irunride.save.' + slot); } catch (e) { /* ignore */ }
+    if (slot === 'auto' && G.Net && G.Net.me) G.Net.clearSave();
+  };
   Save.describe = function (p) {
     if (!p) return G.t('save.empty');
     const d = new Date(p.savedAt);

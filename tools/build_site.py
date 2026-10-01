@@ -62,6 +62,8 @@ def bundle(with_portraits):
             out += ''.join('\n<script>\n%s\n</script>' % safe(read(x)) for x in extra)
         if src == 'config/players.js' and local:
             out += '\n<script>\n%s\n</script>' % safe(local)
+        if src == 'config/players.js' and os.path.exists(os.path.join(ROOT, 'config/online.js')):
+            out += '\n<script>\n%s\n</script>' % safe(read('config/online.js'))
         return out
 
     html = re.sub(r'<script src="([^"]+)"></script>', inline, html)

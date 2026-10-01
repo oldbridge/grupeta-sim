@@ -17,7 +17,10 @@
   // ---------------------------------------------------------------- career (localStorage)
   Game.career = () => G.store.get('career', {});
   Game.careerOf = (name) => Object.assign({ xp: 0, perks: [], rides: 0, km: 0, fitBonus: 0, kom: 0, rel: {}, sport: 0 }, Game.career()[name] || {});
-  Game.saveCareerOf = (name, rec) => { const c = Game.career(); c[name] = rec; G.store.set('career', c); };
+  Game.saveCareerOf = (name, rec) => {
+    const c = Game.career(); c[name] = rec; G.store.set('career', c);
+    if (G.Net && G.Net.me === name) G.Net.pushCareer(rec);
+  };
   const playerStats = (p) => Object.assign({}, p, { fitness: Math.min(100, p.fitness + (Game.careerOf(p.name).fitBonus || 0)) });
 
   // ---------------------------------------------------------------- state (de)serialisation
@@ -99,13 +102,22 @@
   // ---------------------------------------------------------------- top level
   Game.run = async function () {
     for (;;) {
+      // online: every friend logs in with their own password and can only ride their rider
+      if (G.Net.enabled && !G.Net.me) { await Game.login(); await G.Online.afterLogin(); }
+      G.Online.where('menu');
       const action = await Game.title();
       if (action === 'help') { await Game.help(); continue; }
       if (action === 'lang') { await Game.language(); continue; }
+      if (action === 'taberna') { await Game.taberna(); continue; }
+      if (action === 'logout') { await G.Net.logout(); continue; }
       let st = null;
       if (action === 'new') { st = Game.newDay(); st.stage = 'select'; }
       if (action === 'continue') { const p = G.Save.read('auto'); if (p) st = Game.applyPayload(p); }
       if (action === 'load') { const p = await Game.loadMenu(); if (p) st = Game.applyPayload(p); }
+      if (st && G.Net.me && st.playerName && st.playerName !== G.Net.me) {
+        UI.toast(t('login.not_yours', { n: st.playerName }));
+        st = null;
+      }
       if (st) await Game.play(st);
     }
   };
@@ -133,6 +145,7 @@
     Game.ensureRoster(st);
     while (st.stage !== 'done') {
       if (st.stage !== 'ride' || !st.simSave) Game.checkpoint(st);
+      G.Online.where(st.stage === 'ride' ? 'riding' : st.stage, st.stage === 'ride' && st.route ? st.route.name : '');
       switch (st.stage) {
         case 'select': st.stage = (await Game.selectRider(st)) ? 'whatsapp' : 'done'; break;
         case 'whatsapp': await Game.whatsapp(st); st.stage = 'morning'; break;
@@ -205,8 +218,10 @@
       auto ? { label: t('title.continue'), value: 'continue', hint: auto.label } : null,
       { label: t('title.new'), value: 'new', hint: t('title.new_hint') },
       { label: t('title.load'), value: 'load', hint: t('title.load_hint') },
+      { label: t('title.taberna'), value: 'taberna', hint: G.Net.me ? t('title.taberna_hint') : t('title.taberna_offline') },
       { label: t('title.language') + ' · ' + ((window.I18N_LANGS || {})[G.lang] || G.lang), value: 'lang' },
       { label: t('title.help'), value: 'help' },
+      G.Net.me ? { label: t('title.logout', { n: G.Net.me }), value: 'logout' } : null,
     ].filter(Boolean));
     stop();
     return v;
@@ -232,7 +247,7 @@
   Game.selectRider = function (st) {
     return new Promise((resolve) => {
       const list = players();
-      let sel = Math.max(0, list.findIndex((p) => p.name === G.store.get('lastRider', '')));
+      let sel = Math.max(0, list.findIndex((p) => p.name === (G.Net.me || G.store.get('lastRider', ''))));
       const info = el('div', { class: 'stat-info' }, [
         el('h3', { text: t('select.stats_title') }),
         ...STAT_ORDER.map((k) => el('div', { class: 'stat-row' }, [el('b', { text: t('stats.' + k + '.name') }), el('span', { text: t('stats.' + k + '.info') })])),
@@ -252,6 +267,7 @@
           ])]),
           el('div', { class: 'rc-stats' }, STAT_ORDER.map((k) => UI.bar(ps[k], 100, 'st-' + k, t('stats.' + k + '.short')))),
         ]);
+        if (G.Net.me && p.name !== G.Net.me) card.classList.add('locked');
         card.addEventListener('click', () => { if (sel === i) confirm(); else { sel = i; paint(); } });
         grid.appendChild(card);
         return card;
@@ -263,7 +279,9 @@
       const paint = () => {
         cards.forEach((c, i) => c.classList.toggle('sel', i === sel));
         const p = list[sel], car = Game.careerOf(p.name);
-        go.textContent = t('select.ride_as', { n: p.name });
+        const locked = G.Net.me && p.name !== G.Net.me;
+        go.textContent = locked ? t('login.locked', { n: p.name }) : t('select.ride_as', { n: p.name });
+        go.disabled = !!locked;
         detail.innerHTML = '';
         detail.append(...[
           el('div', { class: 'rd-head' }, [face(p.name, 96), el('div', {}, [el('div', { class: 'rd-name', text: p.name }), el('div', { class: 'small muted', text: `${p.weight} kg · ${p.gender === 'f' ? '♀' : '♂'}` })])]),
@@ -285,6 +303,7 @@
         return false;
       };
       const confirm = () => {
+        if (G.Net.me && list[sel].name !== G.Net.me) return;
         UI.popKeys(keys);
         const p = list[sel];
         st.playerName = p.name;
@@ -787,7 +806,11 @@
     if (route.kind === 'epic' && me.status === 'finished') xp.push(['epic', 40]);
     let total = xp.reduce((a, x) => a + x[1], 0);
     if (me.status === 'home') { total = Math.round(total / 2); xp.push(['dnf', 0]); }
+    const keep = /[⚡⛰💥☕🏆🚰🍌😡😠🦶🏠]/u;
+    const log = sim.feed.filter((f) => f.kind !== 'info' || keep.test(f.text)).slice(-70)
+      .map((f) => ({ c: G.fmtClock(sim.startMin + f.t / 60), x: (f.who ? f.who + ': ' : '') + f.text, k: f.kind }));
     st.result = {
+      log,
       routeId: route.id, abandoned: me.status === 'home', time: me.finishT, dist, moving, kj, homeClock,
       maxV: me.stats.maxV, pull: me.stats.pull, attacks: me.stats.attacks, falls: me.stats.falls, kom: me.stats.kom.slice(),
       challenge: sim.challenge && sim.challenge.done ? { name: sim.challenge.rider.name, won: sim.challenge.won } : null,
@@ -809,6 +832,7 @@
       for (const x of R.rel) car.rel[x.n] = Math.round(x.after * 100) / 100;
       R.applied = true;
       Game.saveCareerOf(me, car);
+      G.Online.recordRide(st);
       Game.checkpoint(st);   // resumable without applying twice
     }
     const lvl1 = Social.levelFor(car.xp);

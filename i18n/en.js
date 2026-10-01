@@ -19,6 +19,7 @@ window.I18N.en = {
     name: 'IGANDEKO IRTEERA', sub: 'Irun Sunday ride simulator', tagline: 'Sunday ride · Irun · since 2017',
     intro: '{routes} real routes from the group\'s Garmin rides ({home} from Irun, the rest by car or at big sportives), {riders} riders, one coffee stop too many.',
     continue: 'Continue', new: 'New Sunday', new_hint: 'pick a rider, call the ride, go',
+    taberna: '🍺 Altzola taberna', taberna_hint: 'who is online, chat, brag, everybody\'s rides', taberna_offline: 'online version only (here: this browser)', logout: 'Log out ({n})',
     load: 'Load game', load_hint: 'slots or a save file', language: 'Language', help: 'How to play',
   },
   help: {
@@ -371,6 +372,28 @@ window.I18N.en = {
     pockets: { name: 'Big pockets', desc: 'Carry one more food item.' },
     talker: { name: 'Smooth talker', desc: 'Proposals and taunts land better.' },
     descender: { name: 'Fearless descender', desc: 'Faster downhill (+10% speed cap).' },
+  },
+
+  // ---------------------------------------------------------------- personal login + Altzola taberna
+  login: {
+    title: 'Who are you?', sub: 'Your personal password: only you can ride as you', password: 'Personal password',
+    enter: 'Enter ▶', hint: 'Pick your rider and type your password', wrong: 'Wrong password', too_many: 'Too many tries. Wait a minute.',
+    not_yours: 'That save belongs to {n}', locked: '🔒 Only {n} can ride as {n}',
+  },
+  tab: {
+    title: 'Altzola taberna', offline: 'offline: only what this browser knows', sub: '{on} online · {here} in the tavern', leave: '← Leave',
+    never: 'never', ago_now: 'just now', ago_min: '{n} min ago', ago_h: '{n} h ago', ago_d: '{n} days ago',
+    where: { menu: 'at the menu', select: 'choosing kit', whatsapp: 'on WhatsApp', morning: 'getting ready', meeting: 'at the meeting point',
+      riding: 'riding', results: 'looking at the results', taberna: 'in the tavern 🍺', done: 'around' },
+    last_seen: 'last seen {ago}', never_seen: 'never came by', lv: 'Lv {n}',
+    chat: 'TAVERN CHAT', say: 'Say something…', send: 'Send', send_fail: 'Could not send', chat_offline: 'The chat needs the online version.',
+    brag_last: '🏆 Brag about my last ride', show_stats: '📊 Show my stats', no_rides: 'No rides to brag about yet',
+    stats_line: 'My numbers: level {lvl}, {rides} rides, {km} km, {kom} KOMs, sportiveness {sport} 💪',
+    brag_win: '🏆 Won {route}! {time} at {avg} km/h. Who\'s next?', brag: '🚴 {route}: {pos}/{n}, {km} km in {time} ({avg} km/h)',
+    brag_dnf: '🏠 Went home early from {route}… next time!', see_ride: '📜 See the ride', brag_this: '🏆 Brag in the tavern',
+    back_chat: '← Chat', f_rides: '🚴 {n} rides', f_km: '📏 {n} km', f_kom: '⛰️ {n} KOM', f_sport: '🤝 {n}',
+    friends: 'Best mates:', enemies: 'Not so friendly:', history: 'Ride registry', no_rides_yet: 'No rides yet.', ride_gone: 'That ride is gone',
+    reg_line: '{time} · {pos}/{n} · {km} km · {avg} km/h', reg_line2: '{kj} kJ · max {max} km/h · pulls {pull} · +{xp} XP · sportiveness {sport}',
   },
 
   // ---------------------------------------------------------------- save

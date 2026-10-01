@@ -24,7 +24,14 @@ def main():
         pg.on('console', lambda m: errors.append(f'{m.type}: {m.text}') if m.type in ('error', 'warning') else None)
         pg.on('pageerror', lambda e: errors.append(f'pageerror: {e}'))
         lang = os.environ.get('GAMELANG', 'en')
-        pg.goto(f'file://{ROOT}/index.html?fast=1&seed={SEED}&lang={lang}' + ('&nolocal=1' if os.environ.get('NOLOCAL') else ''))
+        base = f'file://{ROOT}/index.html'
+        if os.environ.get('ONLINE'):     # online mode needs http (Firebase); serve the folder locally
+            import http.server, threading, functools
+            srv = http.server.ThreadingHTTPServer(('127.0.0.1', 8779), functools.partial(http.server.SimpleHTTPRequestHandler, directory=ROOT))
+            srv.RequestHandlerClass.log_message = lambda *a, **k: None
+            threading.Thread(target=srv.serve_forever, daemon=True).start()
+            base = 'http://localhost:8779/index.html'
+        pg.goto(base + f'?fast=1&seed={SEED}&lang={lang}' + ('&nolocal=1' if os.environ.get('NOLOCAL') else '') + ('' if os.environ.get('ONLINE') else '&offline=1'))
         time.sleep(1)
 
         def L(key, rx):
@@ -102,6 +109,12 @@ def main():
                     if st[0] < 55: pg.keyboard.press('e')
                     if st[2] < 55: pg.keyboard.press('d')
                 time.sleep(1.0)
+                continue
+            if pg.query_selector('.login-pw'):
+                accounts = dict(re.findall(r'^(\S.*?)\s{2,}(\S+)$', open(os.path.join(ROOT, 'build', 'accounts.txt')).read(), re.M))
+                for c in pg.query_selector_all('.login-card'):
+                    if c.inner_text().strip() == RIDER: c.click()
+                pg.fill('.login-pw', accounts[RIDER]); pg.keyboard.press('Enter'); time.sleep(3)
                 continue
             if pg.query_selector('.rider-grid'):
                 cards = labels('.rider-card')

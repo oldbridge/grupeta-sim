@@ -1,0 +1,39 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "profiles": {
+      ".read": "auth != null",
+      "$k": { ".write": "auth != null && auth.token.email === $k + '@grupeta.invalid'" }
+    },
+    "careers": {
+      ".read": "auth != null",
+      "$k": { ".write": "auth != null && auth.token.email === $k + '@grupeta.invalid'" }
+    },
+    "saves": {
+      "$k": {
+        ".read": "auth != null && auth.token.email === $k + '@grupeta.invalid'",
+        ".write": "auth != null && auth.token.email === $k + '@grupeta.invalid'"
+      }
+    },
+    "rides": {
+      ".read": "auth != null",
+      "$k": {
+        ".write": "auth != null && auth.token.email === $k + '@grupeta.invalid'",
+        ".indexOn": ["ts"]
+      }
+    },
+    "presence": {
+      ".read": "auth != null",
+      "$k": { ".write": "auth != null && auth.token.email === $k + '@grupeta.invalid'" }
+    },
+    "chat": {
+      ".read": "auth != null",
+      ".indexOn": ["ts"],
+      "$m": {
+        ".write": "auth != null && !data.exists() && newData.exists() && auth.token.email === newData.child('k').val() + '@grupeta.invalid'",
+        ".validate": "newData.hasChildren(['k', 'n', 'text', 'ts']) && newData.child('text').isString() && newData.child('text').val().length <= 600 && newData.child('ts').val() <= now + 60000"
+      }
+    }
+  }
+}

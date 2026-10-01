@@ -7,3 +7,6 @@ config/players.local.js
 build/
 __pycache__/
 *.pyc
+
+# Firebase project config (bundled only into the encrypted site)
+config/online.js

@@ -432,5 +432,42 @@
     });
   };
 
+  // Altzola taberna: wooden interior, bar counter with taps, bottles, the riders who are in
+  A.sceneTaberna = function (cv, looks, genders) {
+    const c = cv.getContext('2d'), w = cv.width, h = cv.height;
+    genders = genders || [];
+    A.px(c, 0, 0, w, h, '#4a2e1c');
+    for (let x = 0; x < w; x += 12) A.px(c, x, 0, 1, 110, '#3d2516');
+    // windows with a green Basque hillside
+    for (const wx of [18, 236]) {
+      A.px(c, wx, 22, 66, 46, '#2a1a0f'); A.px(c, wx + 3, 25, 60, 40, '#9fd0f0');
+      for (let i = 0; i < 60; i++) A.px(c, wx + 3 + i, 45 + Math.round(Math.sin((i + wx) * 0.15) * 4), 1, 20 - Math.round(Math.sin((i + wx) * 0.15) * 4), '#5b8c4f');
+      A.px(c, wx + 32, 25, 2, 40, '#2a1a0f'); A.px(c, wx + 3, 44, 60, 2, '#2a1a0f');
+    }
+    // the sign board (text drawn by the page overlay)
+    A.px(c, 112, 4, 96, 16, '#2a1a0f'); A.px(c, 114, 6, 92, 12, '#3a2416');
+    // shelves with bottles behind the bar
+    for (const sy of [44, 66]) {
+      A.px(c, 100, sy, 120, 3, '#6b4423');
+      for (let i = 0; i < 14; i++) {
+        const col = ['#2e7d32', '#8d6e63', '#c62828', '#f9a825', '#1565c0'][(i * 7 + sy) % 5];
+        A.px(c, 104 + i * 8, sy - 12, 4, 12, col); A.px(c, 105 + i * 8, sy - 15, 2, 3, col);
+      }
+    }
+    // the counter
+    A.px(c, 0, 108, w, 6, '#8b5a2b'); A.px(c, 0, 114, w, 24, '#6b4423');
+    for (let x = 6; x < w; x += 26) A.px(c, x, 116, 18, 20, '#5a381c');
+    for (const tx of [130, 150, 170]) { A.px(c, tx, 92, 4, 16, '#c0c0c0'); A.px(c, tx - 2, 90, 8, 3, '#e8452c'); }
+    // pintxos and glasses on the bar
+    for (let x = 20; x < w - 20; x += 46) { A.px(c, x, 104, 10, 3, '#f2d16b'); A.px(c, x + 2, 101, 6, 3, '#c62828'); A.px(c, x + 18, 99, 4, 9, '#fff3c4'); }
+    A.px(c, 0, 138, w, 22, '#3a2416');
+    for (let x = 0; x < w; x += 20) A.px(c, x, 138, 1, 22, '#2e1c10');
+    const n = looks.length;
+    looks.forEach((lk, i) => {
+      const x = n === 1 ? 160 : 24 + (i * 272) / Math.max(1, n - 1);
+      A.standing(c, Math.min(300, x), 158, lk, { bike: false, cup: true, ponytail: genders[i] === 'f' });
+    });
+  };
+
   G.Art = A;
 })();

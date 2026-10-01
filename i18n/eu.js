@@ -14,6 +14,7 @@ window.I18N.eu = {
     name: 'GRUPETA SIMULATOR', sub: 'Irungo igandeko irteeren simulagailua', tagline: 'Igandeko irteera · Irun · 2017tik',
     intro: '{routes} ibilbide erreal taldearen Garmin irteeretatik ({home} Irundik, gainerakoak autoz edo martxa handietan), {riders} txirrindulari, eta beti kafe-geldialdi bat gehiegi.',
     continue: 'Jarraitu', new: 'Igande berria', new_hint: 'aukeratu txirrindularia, deitu irteera, aurrera',
+    taberna: '🍺 Altzola taberna', taberna_hint: 'nor dagoen, txata, harrokeriak, denen irteerak', taberna_offline: 'lineako bertsioan bakarrik (hemen: nabigatzaile hau)', logout: 'Saioa itxi ({n})',
     load: 'Partida kargatu', load_hint: 'tarteak edo fitxategia', language: 'Hizkuntza', help: 'Nola jokatu',
   },
   help: {
@@ -366,6 +367,28 @@ window.I18N.eu = {
     pockets: { name: 'Poltsiko handiak', desc: 'Janari bat gehiago eraman dezakezu.' },
     talker: { name: 'Hiztun trebea', desc: 'Proposamenek eta ziriek eragin handiagoa dute.' },
     descender: { name: 'Jaitsiera beldurgabea', desc: 'Azkarrago aldapa behera (+%10 abiadura-muga).' },
+  },
+
+  // ---------------------------------------------------------------- saio pertsonala + Altzola taberna
+  login: {
+    title: 'Nor zara?', sub: 'Zure pasahitz pertsonala: zuk bakarrik ibil zaitezke zure txirrindulariarekin', password: 'Pasahitz pertsonala',
+    enter: 'Sartu ▶', hint: 'Aukeratu zure txirrindularia eta idatzi zure pasahitza', wrong: 'Pasahitz okerra', too_many: 'Saiakera gehiegi. Itxaron minutu bat.',
+    not_yours: 'Partida hori ez da zurea ({n})', locked: '🔒 {n}: berak bakarrik',
+  },
+  tab: {
+    title: 'Altzola taberna', offline: 'lineaz kanpo: nabigatzaile honek dakiena bakarrik', sub: '{on} konektatuta · {here} tabernan', leave: '← Irten',
+    never: 'inoiz ez', ago_now: 'oraintxe', ago_min: 'duela {n} min', ago_h: 'duela {n} ordu', ago_d: 'duela {n} egun',
+    where: { menu: 'menuan', select: 'ekipamendua aukeratzen', whatsapp: 'WhatsAppen', morning: 'prestatzen', meeting: 'elkargunean',
+      riding: 'pedalean', results: 'emaitzak begiratzen', taberna: 'tabernan 🍺', done: 'inguruan' },
+    last_seen: 'azkenekoz: {ago}', never_seen: 'ez da inoiz etorri', lv: '{n}. maila',
+    chat: 'TABERNAKO TXATA', say: 'Esan zerbait…', send: 'Bidali', send_fail: 'Ezin izan da bidali', chat_offline: 'Txatak lineako bertsioa behar du.',
+    brag_last: '🏆 Harrotu azken irteeraz', show_stats: '📊 Erakutsi nire datuak', no_rides: 'Oraindik ez dago harrotzeko irteerarik',
+    stats_line: 'Nire zenbakiak: {lvl}. maila, {rides} irteera, {km} km, {kom} mendi-sari, kiroltasuna {sport} 💪',
+    brag_win: '🏆 Irabazita: {route}! {time}, {avg} km/h. Nor da hurrengoa?', brag: '🚴 {route}: {pos}/{n}, {km} km, {time} ({avg} km/h)',
+    brag_dnf: '🏠 Goiz etxera ({route})… hurrengoan!', see_ride: '📜 Ikusi irteera', brag_this: '🏆 Harrotu tabernan',
+    back_chat: '← Txata', f_rides: '🚴 {n} irteera', f_km: '📏 {n} km', f_kom: '⛰️ {n} mendi', f_sport: '🤝 {n}',
+    friends: 'Lagun onenak:', enemies: 'Ez hain lagunak:', history: 'Irteeren erregistroa', no_rides_yet: 'Oraindik irteerarik ez.', ride_gone: 'Irteera hori ez dago',
+    reg_line: '{time} · {pos}/{n} · {km} km · {avg} km/h', reg_line2: '{kj} kJ · gehien. {max} km/h · txandak {pull} · +{xp} XP · kiroltasuna {sport}',
   },
 
   // ---------------------------------------------------------------- gorde
