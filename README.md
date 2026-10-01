@@ -66,6 +66,19 @@ The roster is read at startup from **`config/players.js`** — edit it and reloa
 - **Private overrides:** `config/players.local.js` (git-ignored, optional) is merged on top by rider name — e.g. `{"players": {"Xabi": {"portrait": "config/portraits/xabi.jpg"}}}`. Use it for personal photos. `?nolocal=1` ignores it.
 - Careers and relationships are keyed by name. Saves keep working when riders are added or removed (removed ones simply stop appearing).
 
+## Online version (GitHub Pages, password-protected)
+
+`python3 tools/build_site.py --with-portraits --deploy` inlines the whole game (all languages and, with
+`--with-portraits`, the private photos from `config/players.local.js`) into one page, gzips it, encrypts it
+with AES-256-GCM (key from the password via PBKDF2-SHA256, 600 000 iterations) and force-pushes it to the
+`gh-pages` branch. GitHub Pages serves it at https://oldbridge.github.io/grupeta-sim/; visitors type the
+password and the browser decrypts the game (it can remember the key on that device). Run the command again
+after changes, or with a new password (`GRUPETA_PASSWORD=...` to skip the prompt).
+
+This is client-side protection: anyone with the password can open the game, and its strength is the
+strength of the password. The source code in this public repository is readable anyway; the encryption
+keeps the hosted game and the photos private.
+
 ## Saving
 
 - The game **autosaves** at every stage and every 20 s during the ride → *Continue* on the title screen.
@@ -115,4 +128,5 @@ tools/import_players.py    player_stats.ods → config/players.js (and --check)
 tools/simtest.js           headless rides and statistics
 tools/playtest.py          Playwright autopilot through a whole Sunday (TRIP=home|away|epic, ASKBAR=1, CRASHTEST=1, FOOT=1)
 tools/savetest.py          save → quit → continue → reload → load slot round trip
+tools/build_site.py        encrypted single-page build for GitHub Pages (--with-portraits, --deploy)
 ```

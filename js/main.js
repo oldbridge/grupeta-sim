@@ -34,13 +34,14 @@
   const langs = window.I18N_LANGS || { en: 'English' };
   (async () => {
     // config/players.local.js: private, git-ignored rider overrides (e.g. portrait photos)
-    if (!q.has('nolocal')) await load('config/players.local.js');
+    if (!q.has('nolocal') && !window.PLAYERS_LOCAL) await load('config/players.local.js');
     G.initPlayers();
     if (!window.PLAYERS || !window.PLAYERS.length) {
       document.getElementById('screen').textContent = 'No riders: check config/players.js (python3 tools/import_players.py --check). ' + (G.playerWarnings || []).join(' · ');
       return;
     }
-    if (lang !== 'en' && langs[lang] && (await load('i18n/' + lang + '.js')) && window.I18N && window.I18N[lang]) G.lang = lang;
+    // (in the bundled site all languages are already inlined)
+    if (lang !== 'en' && langs[lang] && ((window.I18N && window.I18N[lang]) || (await load('i18n/' + lang + '.js'))) && window.I18N && window.I18N[lang]) G.lang = lang;
     start();
   })();
 })();
