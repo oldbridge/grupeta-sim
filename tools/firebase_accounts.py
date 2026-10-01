@@ -13,8 +13,8 @@ Firebase console (Authentication > Users) and run this again to give it a new pa
 import json, os, random, re, sys, unicodedata, urllib.error, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-WORDS = ['gurpila', 'pedala', 'balazta', 'kaskoa', 'jarlekua', 'eskulekua', 'bidoia', 'maillota', 'erradioa',
-         'platera', 'ganbera', 'txirrindu', 'aldapa', 'tontorra', 'jaitsiera', 'abiadura', 'kadentzia', 'bizikleta']
+# password words: one per line in config/password_words.txt (git-ignored, so not published)
+WORDS_FILE = os.path.join(ROOT, 'config', 'password_words.txt')
 
 
 def online_cfg():
@@ -62,7 +62,9 @@ def main():
             r = call(api_key, 'signInWithPassword', {'email': key(m.group(1)) + '@' + domain, 'password': m.group(2), 'returnSecureToken': True})
             print('%-14s %s' % (m.group(1), 'OK' if 'idToken' in r else r.get('error', {}).get('message')))
         return
-    words = WORDS[:]
+    if not os.path.exists(WORDS_FILE):
+        sys.exit('put one password word per line in config/password_words.txt')
+    words = [w.strip() for w in open(WORDS_FILE, encoding='utf-8') if w.strip() and len(w.strip()) >= 6]
     random.shuffle(words)
     rows = []
     for name in riders():

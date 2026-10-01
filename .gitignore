@@ -10,3 +10,4 @@ __pycache__/
 
 # Firebase project config (bundled only into the encrypted site)
 config/online.js
+config/password_words.txt
